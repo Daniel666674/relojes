@@ -26,6 +26,10 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Instalar Pillow
+        run: pip install Pillow
+      - name: Generar sitio estático
+        run: python3 build.py
       - name: Preparar artefacto (sin fotos originales ni fuentes de datos)
         run: |
           mkdir -p _site

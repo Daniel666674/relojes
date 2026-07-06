@@ -4,6 +4,7 @@ import json, os, re, math, html, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://meridiano-relojeria.co"  # dominio de referencia para SEO/sitemap
+GITHUB_PAGES_BASE = "https://daniel666674.github.io/relojes/"
 GA4_ID = "G-XXXXXXXXXX"  # ← reemplazar por el ID real de Google Analytics 4
 WHATSAPP = "573001234567"
 
@@ -14,8 +15,8 @@ COL_ORDER = ["celesta", "regata", "abisal", "faro", "silueta", "cuadrante", "her
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 for p in PRODUCTS:
-    p["img_card"] = f"/assets/img/products/{p['slug']}-card.webp"
-    p["img_lg"] = f"/assets/img/products/{p['slug']}-lg.webp"
+    p["img_card"] = f"assets/img/products/{p['slug']}-card.webp"
+    p["img_lg"] = f"assets/img/products/{p['slug']}-lg.webp"
 
 by_col = {c: [p for p in PRODUCTS if p["collection"] == c] for c in COL_ORDER}
 PER_PAGE = 9
@@ -35,12 +36,13 @@ GA_SNIPPET = f"""
       gtag('config', '{GA4_ID}', {{ anonymize_ip: true }});
     </script>"""
 
-def base_head(title, desc, canonical, extra_ld="", ogimg="/assets/img/og-cover.jpg"):
+def base_head(title, desc, canonical, extra_ld="", ogimg="assets/img/og-cover.jpg"):
     return f"""<!doctype html>
 <html lang="es-CO">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="{GITHUB_PAGES_BASE}">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{SITE}{canonical}">
@@ -48,7 +50,7 @@ def base_head(title, desc, canonical, extra_ld="", ogimg="/assets/img/og-cover.j
 <meta name="geo.region" content="CO">
 <meta name="geo.placename" content="Colombia">
 <meta name="language" content="es-CO">
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MERIDIANO · Casa Relojera">
@@ -56,16 +58,16 @@ def base_head(title, desc, canonical, extra_ld="", ogimg="/assets/img/og-cover.j
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{SITE}{canonical}">
-<meta property="og:image" content="{SITE}{ogimg}">
+<meta property="og:image" content="{SITE}/{ogimg}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{esc(title)}">
 <meta name="twitter:description" content="{esc(desc)}">
-<meta name="twitter:image" content="{SITE}{ogimg}">
+<meta name="twitter:image" content="{SITE}/{ogimg}">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:ital@1&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css">
 {GA_SNIPPET}
 {extra_ld}
 </head>
@@ -74,13 +76,13 @@ def base_head(title, desc, canonical, extra_ld="", ogimg="/assets/img/og-cover.j
 WA_ICON = """<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.02 3C9.4 3 4 8.4 4 15.02c0 2.23.62 4.31 1.7 6.1L4 29l8.06-1.66a12 12 0 0 0 3.96.68h.01c6.62 0 12.01-5.4 12.01-12.02C28 8.4 22.63 3 16.02 3zm7.03 17.13c-.3.83-1.72 1.6-2.37 1.68-.62.08-1.34.11-2.16-.14-.5-.15-1.14-.36-1.96-.7-3.46-1.5-5.72-4.98-5.9-5.21-.17-.24-1.4-1.86-1.4-3.55 0-1.69.9-2.52 1.21-2.86.32-.34.68-.42.9-.42.23 0 .45 0 .65.01.21.01.49-.08.76.58.3.72.99 2.5 1.08 2.68.09.18.15.4.03.63-.12.24-.18.39-.36.6-.18.2-.38.45-.54.61-.18.18-.37.37-.16.72.21.35.94 1.55 2.02 2.51 1.39 1.24 2.56 1.62 2.92 1.8.35.18.56.15.77-.09.21-.24.87-1.01 1.1-1.36.24-.35.47-.29.79-.17.32.12 2.06.97 2.41 1.15.35.18.59.26.68.41.09.15.09.85-.2 1.68z"/></svg>"""
 CART_ICON = """<svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 8H6"/><circle cx="9.5" cy="20" r="1.2" fill="currentColor" stroke="none"/><circle cx="17" cy="20" r="1.2" fill="currentColor" stroke="none"/></svg>"""
 
-NAV = [("/", "Fundación"), ("/vitrinas.html", "Vitrinas"), ("/manifiesto.html", "Manifiesto"), ("/contacto.html", "Contacto")]
+NAV = [("index.html", "Fundación"), ("vitrinas.html", "Vitrinas"), ("manifiesto.html", "Manifiesto"), ("contacto.html", "Contacto")]
 
-def rail(active="/"):
+def rail(active="index.html"):
     items = "".join(f'<a href="{h}" class="{"active" if h==active else ""}">{t}</a>' for h, t in NAV)
     return f"""
 <aside class="rail">
-  <a href="/" class="rail-monogram">M</a>
+  <a href="index.html" class="rail-monogram">M</a>
   <nav class="rail-nav">{items}</nav>
   <a href="#" class="rail-cart js-open-cart" aria-label="Ver vitrina personal (carrito)">
     {CART_ICON}
@@ -88,10 +90,10 @@ def rail(active="/"):
   </a>
 </aside>
 <div class="topbar">
-  <a href="/" class="brand">MERIDI<em>A</em>NO</a>
+  <a href="index.html" class="brand">MERIDI<em>A</em>NO</a>
   <nav>
-    <a href="/vitrinas.html">Vitrinas</a>
-    <a href="/contacto.html">Contacto</a>
+    <a href="vitrinas.html">Vitrinas</a>
+    <a href="contacto.html">Contacto</a>
     <a href="#" class="js-open-cart rail-cart" aria-label="Carrito">{CART_ICON}<span class="js-cart-count is-empty">0</span></a>
   </nav>
 </div>"""
@@ -116,7 +118,7 @@ def wa_float():
     return f'<a class="wa-float js-wa" data-msg="Hola MERIDIANO · Casa Relojera 🕰️, quisiera más información sobre sus piezas." aria-label="Escribir por WhatsApp">{WA_ICON}</a>'
 
 def footer():
-    cols_links = "".join(f'<a href="/vitrinas.html?col={c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER[:5])
+    cols_links = "".join(f'<a href="vitrinas.html?col={c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER[:5])
     return f"""
 <footer>
   <div class="wrap foot-grid">
@@ -125,9 +127,9 @@ def footer():
     </div>
     <nav class="foot-nav">{cols_links}</nav>
     <nav class="foot-nav">
-      <a href="/vitrinas.html">Todas las vitrinas</a>
-      <a href="/manifiesto.html">Manifiesto</a>
-      <a href="/contacto.html">Contacto</a>
+      <a href="vitrinas.html">Todas las vitrinas</a>
+      <a href="manifiesto.html">Manifiesto</a>
+      <a href="contacto.html">Contacto</a>
       <a href="#" class="js-wa" data-msg="Hola MERIDIANO, quisiera hacer una consulta.">WhatsApp directo</a>
     </nav>
     <div class="foot-legal">
@@ -136,20 +138,20 @@ def footer():
     </div>
   </div>
 </footer>
-<script src="/assets/js/store.js" defer></script>
+<script src="assets/js/store.js" defer></script>
 """
 
 def product_card(p, i=0):
     payload = esc(json.dumps({"id": p["id"], "name": p["name"], "price": p["price"], "img": p["img_card"]}, ensure_ascii=False))
     return f"""
 <article class="card reveal" style="transition-delay:{(i%3)*90}ms">
-  <a href="/vitrinas/{p['slug']}.html" class="card-frame">
+  <a href="vitrinas/{p['slug']}.html" class="card-frame">
     <img src="{p['img_card']}" alt="{esc(p['name'])} — reloj {esc(p['dial'])}, {esc(p['material'])}" loading="lazy" width="900" height="900">
   </a>
   <button class="card-add" data-add='{payload}' aria-label="Añadir {esc(p['name'])} a la vitrina personal">+</button>
   <div class="card-body">
     <p class="card-kicker">{COLLECTIONS[p['collection']]['label']}</p>
-    <h3 class="card-name"><a href="/vitrinas/{p['slug']}.html">{esc(p['name'])}</a></h3>
+    <h3 class="card-name"><a href="vitrinas/{p['slug']}.html">{esc(p['name'])}</a></h3>
     <p class="card-dial">Esfera {esc(p['dial'])} · {esc(p['size'])}</p>
     <p class="card-price">{fmt_cop(p['price'])}</p>
   </div>
@@ -166,7 +168,7 @@ def build_index():
         items = by_col[c]
         thumb = items[0]["img_card"]
         col_rows += f"""
-    <a href="/vitrinas.html?col={c}" class="col-row reveal" style="transition-delay:{i*60}ms">
+    <a href="vitrinas.html?col={c}" class="col-row reveal" style="transition-delay:{i*60}ms">
       <span class="idx">{ROMAN[i]}</span>
       <span>
         <h3>{COLLECTIONS[c]['label']}</h3>
@@ -205,16 +207,16 @@ def build_index():
 </script>"""
 
     body = f"""<body>
-{rail("/")}
+{rail("index.html")}
 <main class="page">
   <section class="hero wrap">
     <p class="kicker">Casa relojera colombiana · Fundada para el detalle</p>
     <h1 class="hero-title">
-      <span class="row">MERID<span class="hero-dial"><img src="/assets/img/products/{PRODUCTS[10]['slug']}-card.webp" alt=""></span>ANO</span>
+      <span class="row">MERID<span class="hero-dial"><img src="assets/img/products/{PRODUCTS[10]['slug']}-card.webp" alt=""></span>ANO</span>
     </h1>
     <div class="hero-sub">
       <p>Cincuenta y nueve piezas, ocho vitrinas, una sola convicción: el lujo se mide en detalle, no en ruido.</p>
-      <a href="/vitrinas.html" class="btn solid">Explorar las vitrinas</a>
+      <a href="vitrinas.html" class="btn solid">Explorar las vitrinas</a>
       <a href="#" class="btn js-wa" data-msg="Hola MERIDIANO, quisiera asesoría para elegir una pieza.">Asesoría por WhatsApp</a>
     </div>
     <div class="hero-meta"><span>N.º 001–059</span></div>
@@ -233,18 +235,18 @@ def build_index():
   <section class="section wrap">
     <div class="sec-head">
       <h2><span class="num">II.</span>Piezas destacadas</h2>
-      <a href="/vitrinas.html" class="btn">Ver todas</a>
+      <a href="vitrinas.html" class="btn">Ver todas</a>
     </div>
     <div class="grid">{cards}</div>
   </section>
 
   <section class="section wrap manifest reveal">
-    <div class="visual"><img src="/assets/img/products/{PRODUCTS[45]['slug']}-lg.webp" alt="Detalle de manufactura MERIDIANO" loading="lazy"></div>
+    <div class="visual"><img src="assets/img/products/{PRODUCTS[45]['slug']}-lg.webp" alt="Detalle de manufactura MERIDIANO" loading="lazy"></div>
     <div>
       <p class="kicker">Manifiesto</p>
       <blockquote>&ldquo;No vendemos relojes. Vendemos el instante exacto en que alguien nota el detalle.&rdquo;</blockquote>
       <p class="body">Cada pieza pasa por control visual y mecánico antes de salir de nuestro taller en Bogotá. Elegimos acero premium, cristales resistentes y movimientos silenciosos porque el lujo, para nosotros, es una decisión de ingeniería antes que de mercadeo.</p>
-      <a href="/manifiesto.html" class="btn" style="margin-top:26px">Leer el manifiesto completo</a>
+      <a href="manifiesto.html" class="btn" style="margin-top:26px">Leer el manifiesto completo</a>
     </div>
   </section>
 </main>
@@ -256,13 +258,13 @@ def build_index():
     write("index.html", base_head(
         "MERIDIANO · Casa Relojera — Relojes de alta réplica premium en Colombia",
         "Casa relojera colombiana con 59 piezas de alta réplica premium en 8 vitrinas: buceo, vestir, deportivo integrado y calendario lunar. Envíos a toda Colombia.",
-        "/", ld) + body)
+        "/") + body)
 
 # ============================================================ VITRINAS (catálogo paginado)
 def build_vitrinas():
     total_pages = math.ceil(len(PRODUCTS) / PER_PAGE)
-    chips = '<a href="/vitrinas.html" class="chip active" data-col="todas">Todas</a>' + "".join(
-        f'<a href="/vitrinas.html?col={c}" class="chip" data-col="{c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER)
+    chips = '<a href="vitrinas.html" class="chip active" data-col="todas">Todas</a>' + "".join(
+        f'<a href="vitrinas.html?col={c}" class="chip" data-col="{c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER)
 
     for page in range(1, total_pages + 1):
         chunk = PRODUCTS[(page-1)*PER_PAGE: page*PER_PAGE]
@@ -271,18 +273,18 @@ def build_vitrinas():
         plaques = ""
         prev = page - 1 if page > 1 else None
         nxt = page + 1 if page < total_pages else None
-        prev_href = f"/vitrinas.html" if prev == 1 else (f"/vitrinas/pagina-{prev}.html" if prev else "#")
-        next_href = f"/vitrinas/pagina-{nxt}.html" if nxt else "#"
+        prev_href = "vitrinas.html" if prev == 1 else (f"vitrinas/pagina-{prev}.html" if prev else "#")
+        next_href = f"vitrinas/pagina-{nxt}.html" if nxt else "#"
         plaques += f'<a href="{prev_href}" class="plaque plaque-arrow{" is-off" if not prev else ""}" aria-label="Vitrina anterior">‹</a>'
         for n in range(1, total_pages + 1):
-            href = "/vitrinas.html" if n == 1 else f"/vitrinas/pagina-{n}.html"
+            href = "vitrinas.html" if n == 1 else f"vitrinas/pagina-{n}.html"
             plaques += f'<a href="{href}" class="plaque{" current" if n==page else ""}">{ROMAN[n-1] if n<=10 else n}</a>'
         plaques += f'<a href="{next_href}" class="plaque plaque-arrow{" is-off" if not nxt else ""}" aria-label="Vitrina siguiente">›</a>'
 
         canonical = "/vitrinas.html" if page == 1 else f"/vitrinas/pagina-{page}.html"
         title = "Vitrinas — Catálogo completo" if page == 1 else f"Vitrinas — Página {page} de {total_pages}"
         body = f"""<body>
-{rail("/vitrinas.html")}
+{rail("vitrinas.html")}
 <main class="page">
   <section class="wrap vitrina-head reveal">
     <span class="big-roman">{ROMAN[(page-1)%10]}</span>
@@ -324,11 +326,11 @@ def build_collection_pages():
     for c in COL_ORDER:
         items = by_col[c]
         cards = "".join(product_card(p, i) for i, p in enumerate(items))
-        chips = '<a href="/vitrinas.html" class="chip">Todas</a>' + "".join(
-            f'<a href="/vitrinas/coleccion-{cc}.html" class="chip{" active" if cc==c else ""}">{COLLECTIONS[cc]["label"]}</a>' for cc in COL_ORDER)
+        chips = '<a href="vitrinas.html" class="chip">Todas</a>' + "".join(
+            f'<a href="vitrinas/coleccion-{cc}.html" class="chip{" active" if cc==c else ""}">{COLLECTIONS[cc]["label"]}</a>' for cc in COL_ORDER)
         idx = COL_ORDER.index(c)
         body = f"""<body>
-{rail("/vitrinas.html")}
+{rail("vitrinas.html")}
 <main class="page">
   <section class="wrap vitrina-head reveal">
     <span class="big-roman">{ROMAN[idx]}</span>
@@ -366,7 +368,7 @@ def build_products():
   "@type": "Product",
   "name": p["name"],
   "sku": p["id"],
-  "image": f"{SITE}{p['img_lg']}",
+  "image": f"{SITE}/{p['img_lg']}",
   "description": p["desc"],
   "brand": {"@type": "Brand", "name": "MERIDIANO"},
   "category": col["label"],
@@ -378,7 +380,7 @@ def build_products():
 </script>"""
 
         body = f"""<body data-product='{payload}'>
-{rail("/vitrinas.html")}
+{rail("vitrinas.html")}
 <main class="page">
   <div class="wrap product">
     <div class="product-visual reveal">
@@ -387,7 +389,7 @@ def build_products():
     </div>
     <div class="product-info reveal">
       <p class="breadcrumb">
-        <a href="/">Fundación</a> / <a href="/vitrinas.html">Vitrinas</a> / <a href="/vitrinas/coleccion-{p['collection']}.html">{col['label']}</a>
+        <a href="index.html">Fundación</a> / <a href="vitrinas.html">Vitrinas</a> / <a href="vitrinas/coleccion-{p['collection']}.html">{col['label']}</a>
       </p>
       <h1>{esc(p['name'])}</h1>
       <p class="ref">Referencia {p['id']} · Colección {col['label']}</p>
@@ -420,8 +422,8 @@ def build_products():
   </div>
 
   <nav class="wrap pn-nav">
-    <a href="/vitrinas/{prev_p['slug']}.html">← {esc(prev_p['name'])}</a>
-    <a href="/vitrinas/{next_p['slug']}.html">{esc(next_p['name'])} →</a>
+    <a href="vitrinas/{prev_p['slug']}.html">← {esc(prev_p['name'])}</a>
+    <a href="vitrinas/{next_p['slug']}.html">{esc(next_p['name'])} →</a>
   </nav>
 </main>
 {cart_drawer()}
@@ -437,7 +439,7 @@ def build_products():
 # ============================================================ MANIFIESTO
 def build_manifesto():
     body = f"""<body>
-{rail("/manifiesto.html")}
+{rail("manifiesto.html")}
 <main class="page">
   <section class="wrap vitrina-head reveal">
     <p class="kicker">Manifiesto</p>
@@ -446,7 +448,7 @@ def build_manifesto():
   </section>
 
   <section class="wrap section manifest reveal" style="padding-top:0">
-    <div class="visual"><img src="/assets/img/products/{PRODUCTS[15]['slug']}-lg.webp" alt="Detalle de acabado MERIDIANO" loading="lazy"></div>
+    <div class="visual"><img src="assets/img/products/{PRODUCTS[15]['slug']}-lg.webp" alt="Detalle de acabado MERIDIANO" loading="lazy"></div>
     <div>
       <blockquote>&ldquo;La ostentación es fácil. La precisión es una decisión diaria.&rdquo;</blockquote>
       <p class="body">MERIDIANO nace en Bogotá con una convicción simple: el buen gusto no depende del presupuesto, depende del criterio. Seleccionamos piezas de alta réplica bajo estándares premium —acero quirúrgico, cristales resistentes a rayones, movimientos silenciosos— y las sometemos a control visual y mecánico antes de que lleguen a su muñeca.</p>
@@ -501,7 +503,7 @@ def build_contact():
 }, ensure_ascii=False)}
 </script>"""
     body = f"""<body>
-{rail("/contacto.html")}
+{rail("contacto.html")}
 <main class="page">
   <section class="wrap vitrina-head reveal">
     <p class="kicker">Contacto</p>
