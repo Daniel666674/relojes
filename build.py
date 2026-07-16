@@ -11,7 +11,7 @@ WHATSAPP = "573001234567"
 data = json.load(open(os.path.join(ROOT, "data/products.json"), encoding="utf-8"))
 COLLECTIONS = data["collections"]
 PRODUCTS = data["products"]
-COL_ORDER = ["celesta", "regata", "abisal", "faro", "silueta", "cuadrante", "herencia", "octogono"]
+COL_ORDER = ["rolex", "patek", "cartier"]
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
 for p in PRODUCTS:
@@ -92,8 +92,10 @@ def rail(active="index.html"):
 <div class="topbar">
   <a href="index.html" class="brand">MERIDI<em>A</em>NO</a>
   <nav>
-    <a href="vitrinas.html">Vitrinas</a>
-    <a href="contacto.html">Contacto</a>
+    <a href="index.html" class="{"active" if active=="index.html" else ""}">Fundación</a>
+    <a href="vitrinas.html" class="{"active" if active=="vitrinas.html" else ""}">Vitrinas</a>
+    <a href="manifiesto.html" class="{"active" if active=="manifiesto.html" else ""}">Manifiesto</a>
+    <a href="contacto.html" class="{"active" if active=="contacto.html" else ""}">Contacto</a>
     <a href="#" class="js-open-cart rail-cart" aria-label="Carrito">{CART_ICON}<span class="js-cart-count is-empty">0</span></a>
   </nav>
 </div>"""
@@ -118,7 +120,7 @@ def wa_float():
     return f'<a class="wa-float js-wa" data-msg="Hola MERIDIANO · Casa Relojera 🕰️, quisiera más información sobre sus piezas." aria-label="Escribir por WhatsApp">{WA_ICON}</a>'
 
 def footer():
-    cols_links = "".join(f'<a href="vitrinas.html?col={c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER[:5])
+    cols_links = "".join(f'<a href="vitrinas.html?col={c}">{COLLECTIONS[c]["label"]}</a>' for c in COL_ORDER)
     return f"""
 <footer>
   <div class="wrap foot-grid">
@@ -160,7 +162,7 @@ def product_card(p, i=0):
 # ============================================================ INDEX
 def build_index():
     feat = [p for p in PRODUCTS if p.get("featured")][:6]
-    ticker_words = ["Precisión suiza de diseño", "Envíos a toda Colombia", "Piezas de alta réplica", "Garantía de 6 meses", "Pago contraentrega en Bogotá", "Acabados premium"]
+    ticker_words = ["Rolex · Referencias icónicas", "Patek Philippe · Alta complicación", "Cartier · Distinción parisina", "Envíos a toda Colombia", "Garantía de 6 meses", "Pago contraentrega en Bogotá"]
     ticker = "".join(f"<span>{w}</span>" for w in ticker_words) * 2
 
     col_rows = ""
@@ -187,7 +189,7 @@ def build_index():
   "name": "MERIDIANO · Casa Relojera",
   "url": SITE,
   "image": f"{SITE}/assets/img/og-cover.jpg",
-  "description": "Casa relojera colombiana especializada en piezas de alta réplica premium: relojes de vestir, buceo y deportivos integrados.",
+  "description": "Casa relojera colombiana especializada en piezas de alta réplica premium inspiradas en Rolex, Patek Philippe y Cartier.",
   "priceRange": "$$$",
   "address": {"@type": "PostalAddress", "addressLocality": "Bogotá", "addressCountry": "CO"},
   "areaServed": "CO",
@@ -215,7 +217,7 @@ def build_index():
       <span class="row">MERID<span class="hero-dial"><img src="assets/img/products/{PRODUCTS[10]['slug']}-card.webp" alt=""></span>ANO</span>
     </h1>
     <div class="hero-sub">
-      <p>Cincuenta y nueve piezas, ocho vitrinas, una sola convicción: el lujo se mide en detalle, no en ruido.</p>
+      <p>Cincuenta y nueve piezas: Rolex, Patek Philippe y Cartier. Una sola convicción — el lujo se mide en detalle, no en ruido.</p>
       <a href="vitrinas.html" class="btn solid">Explorar las vitrinas</a>
       <a href="#" class="btn js-wa" data-msg="Hola MERIDIANO, quisiera asesoría para elegir una pieza.">Asesoría por WhatsApp</a>
     </div>
@@ -226,8 +228,8 @@ def build_index():
 
   <section class="section wrap col-index">
     <div class="sec-head">
-      <h2><span class="num">I.</span>Las ocho vitrinas</h2>
-      <p class="lede" style="color:var(--muted);max-width:360px">Cada colección agrupa una familia de diseño: de los cronógrafos de regata al calendario lunar octogonal.</p>
+      <h2><span class="num">I.</span>Las tres marcas</h2>
+      <p class="lede" style="color:var(--muted);max-width:360px">Rolex, Patek Philippe, Cartier — las tres manufacturas que definen el lujo suizo y parisino en cada época.</p>
     </div>
     {col_rows}
   </section>
@@ -257,7 +259,7 @@ def build_index():
 </html>"""
     write("index.html", base_head(
         "MERIDIANO · Casa Relojera — Relojes de alta réplica premium en Colombia",
-        "Casa relojera colombiana con 59 piezas de alta réplica premium en 8 vitrinas: buceo, vestir, deportivo integrado y calendario lunar. Envíos a toda Colombia.",
+        "Casa relojera colombiana con 59 piezas de alta réplica premium: Rolex, Patek Philippe y Cartier. Envíos a toda Colombia.",
         "/") + body)
 
 # ============================================================ VITRINAS (catálogo paginado)
@@ -290,7 +292,7 @@ def build_vitrinas():
     <span class="big-roman">{ROMAN[(page-1)%10]}</span>
     <p class="kicker">Catálogo · Placa {page:02d} de {total_pages:02d}</p>
     <h1>Las vitrinas</h1>
-    <p class="lede">Cincuenta y nueve piezas organizadas en ocho colecciones. Sin desplazamiento infinito: cada vitrina es una placa numerada, como en una boutique real.</p>
+    <p class="lede">Cincuenta y nueve piezas de Rolex, Patek Philippe y Cartier. Sin desplazamiento infinito: cada vitrina es una placa numerada, como en una boutique real.</p>
     <div class="chips">{chips}</div>
   </section>
 
@@ -561,7 +563,7 @@ def build_llms_txt():
     lines = [
         "# MERIDIANO · Casa Relojera",
         "",
-        "> Casa relojera colombiana especializada en piezas de alta réplica premium (buceo, vestir, deportivo integrado, calendario lunar). No afiliada a las manufacturas originales que inspiran cada diseño.",
+        "> Casa relojera colombiana especializada en piezas de alta réplica premium inspiradas en Rolex, Patek Philippe y Cartier. No afiliada a las manufacturas originales que inspiran cada diseño.",
         "",
         "Idioma: español (Colombia). Moneda: COP. Envíos a toda Colombia. Contacto principal: WhatsApp.",
         "",
