@@ -302,6 +302,7 @@ main { position: relative; z-index: 1; }
 
 .card { position: relative; }
 .card-frame {
+  display: block;
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
@@ -317,6 +318,7 @@ main { position: relative; z-index: 1; }
 }
 .card:hover .card-frame::after { inset: 0; }
 .card-frame img {
+  position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.8s cubic-bezier(0.2, 0.6, 0.2, 1), filter 0.5s;
