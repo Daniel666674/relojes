@@ -386,7 +386,7 @@ def build_products():
 <main class="page">
   <div class="wrap product">
     <div class="product-visual reveal">
-      <div class="frame"><img src="{p['img_lg']}" alt="{esc(p['name'])} — {esc(p['dial'])}" width="1400" height="1050"></div>
+      <div class="frame"><img src="{p['img_lg']}" alt="{esc(p['name'])} — {esc(p['dial'])}" width="1200" height="1200"></div>
       <p class="caption">{col['label']} · Ref. {p['id']}</p>
     </div>
     <div class="product-info reveal">
@@ -593,10 +593,10 @@ def build_favicon():
     write("assets/img/favicon.svg", svg)
 
 def build_og_cover():
-    from PIL import Image
+    from PIL import Image, ImageOps
     src = "assets/img/products/" + PRODUCTS[10]["slug"] + "-lg.webp"
     im = Image.open(os.path.join(ROOT, src)).convert("RGB")
-    im = im.resize((1200, 630))
+    im = ImageOps.fit(im, (1200, 630), Image.LANCZOS)
     im.save(os.path.join(ROOT, "assets/img/og-cover.jpg"), quality=85)
 
 if __name__ == "__main__":
